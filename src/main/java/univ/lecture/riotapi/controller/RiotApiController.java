@@ -13,49 +13,57 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import univ.lecture.riotapi.model.Summoner;
+import univ.lecture.riotapi.AppController;
+import univ.lecture.riotapi.model.Result;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Map;
 
+import com.google.gson.Gson;
+
 /**
  * Created by tchi on 2017. 4. 1..
  */
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/")
 @Log4j
 public class RiotApiController {
-    @Autowired
-    private RestTemplate restTemplate;
-    
-    @Value("${riot.api.endpoint}")
-    private String riotApiEndpoint;
+	@Autowired
+	private RestTemplate restTemplate;
 
-    @Value("${riot.api.key}")
-    private String riotApiKey;
+	@Value("${riot.api.endpoint}")
+	private String riotApiEndpoint;
 
-    @RequestMapping(value = "/calc/{math}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public @ResponseBody Summoner querySummoner(@RequestBody @PathVariable("math") String math) throws UnsupportedEncodingException {
-    	final String url = riotApiEndpoint + "/summoner/by-name/" +
-                math +
-                "?api_key=" +
-                riotApiKey;
+	@Value("${riot.api.key}")
+	private String riotApiKey;
 
-        String response = restTemplate.getForObject(url, String.class);
-        Map<String, Object> parsedMap = new JacksonJsonParser().parseMap(response);/*
-    	AppController appController = new AppController();
-    	double result = appController.run(math);*/
-        double result = 0;
-    	Date time = new Date();
-        parsedMap.forEach((key, value) -> log.info(String.format("key [%s] type [%s] value [%s]", key, value.getClass(), value)));
-        int teamId = 5;
-        long now = time.getTime();
-        Map<String, Object> summonerDetail = (Map<String, Object>) parsedMap.values().toArray()[0];
-        String queriedName = (String)summonerDetail.get("name");
-        int queriedLevel = (Integer)summonerDetail.get("summonerLevel");
-        Summoner summoner = new Summoner(teamId, now, result);
+	@RequestMapping(value = "/summoner/{name}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public String querySummoner(@PathVariable("name") @RequestBody String expression)
+			throws UnsupportedEncodingException {
+		Date date = new Date();
+		AppController appController = new AppController();
 
-        return summoner;
-    }
+		int queriedId = 5;
+		long queriedNow = date.getTime();
+		double queriedResult = appController.run(expression);
+
+		expression = String.valueOf(queriedResult);
+
+		final String url = riotApiEndpoint;
+
+		// String response = restTemplate.getForObject(url, String.class);
+		// Map<String, Object> parsedMap = new
+		// JacksonJsonParser().parseMap(response);
+
+		Result result = new Result(queriedId, queriedNow, queriedResult);
+
+		Gson gson = new Gson();
+
+		String test = gson.toJson(result);
+		String res = restTemplate.postForObject(url, test, String.class);
+
+		return res;
+	}
 }
