@@ -37,24 +37,23 @@ public class RiotApiController {
     private String riotApiKey;
 
     @RequestMapping(value = "/calc/{math}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public @ResponseBody Summoner querySummoner(@RequestBody @PathVariable("math") String math) throws UnsupportedEncodingException {/*
+    public @ResponseBody Summoner querySummoner(@RequestBody @PathVariable("math") String math) throws UnsupportedEncodingException {
     	final String url = riotApiEndpoint + "/summoner/by-name/" +
                 math +
                 "?api_key=" +
                 riotApiKey;
 
         String response = restTemplate.getForObject(url, String.class);
-        Map<String, Object> parsedMap = new JacksonJsonParser().parseMap(response);*/
+        Map<String, Object> parsedMap = new JacksonJsonParser().parseMap(response);
     	AppController appController = new AppController();
     	double result = appController.run(math);
-    	Date time = new Date();/*
-    	Map<String, Object> parsedMap = new JacksonJsonParser().parseMap(math);
-        parsedMap.forEach((key, value) -> log.info(String.format("key [%s] type [%s] value [%s]", key, value.getClass(), value)));*/
+    	Date time = new Date();
+        parsedMap.forEach((key, value) -> log.info(String.format("key [%s] type [%s] value [%s]", key, value.getClass(), value)));
         int teamId = 5;
-        long now = time.getTime();/*
+        long now = time.getTime();
         Map<String, Object> summonerDetail = (Map<String, Object>) parsedMap.values().toArray()[0];
         String queriedName = (String)summonerDetail.get("name");
-        int queriedLevel = (Integer)summonerDetail.get("summonerLevel");*/
+        int queriedLevel = (Integer)summonerDetail.get("summonerLevel");
         Summoner summoner = new Summoner(teamId, now, result);
 
         return summoner;
