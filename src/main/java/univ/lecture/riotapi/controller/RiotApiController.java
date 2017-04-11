@@ -46,6 +46,7 @@ public class RiotApiController {
         Map<String, Object> parsedMap = new JacksonJsonParser().parseMap(response);/*
     	AppController appController = new AppController();
     	double result = appController.run(math);*/
+        double result = 0;
     	Date time = new Date();
         parsedMap.forEach((key, value) -> log.info(String.format("key [%s] type [%s] value [%s]", key, value.getClass(), value)));
         int teamId = 5;
