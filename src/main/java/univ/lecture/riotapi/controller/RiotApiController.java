@@ -6,10 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import univ.lecture.riotapi.model.Summoner;
@@ -33,10 +31,10 @@ public class RiotApiController {
     @Value("${riot.api.key}")
     private String riotApiKey;
 
-    @RequestMapping(value = "/calc/{math}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public /*@ResponseBody*/ Summoner querySummoner(/*@RequestBody*/ @PathVariable("math") String math) throws UnsupportedEncodingException {
+    @RequestMapping(value = "/summoner/{name}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Summoner querySummoner(@PathVariable("name") String summonerName) throws UnsupportedEncodingException {
     	final String url = riotApiEndpoint + "/summoner/by-name/" +
-                math +
+                summonerName +
                 "?api_key=" +
                 riotApiKey;
 
