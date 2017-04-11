@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import univ.lecture.riotapi.AppController;
 import univ.lecture.riotapi.model.Summoner;
 
 import java.io.UnsupportedEncodingException;
@@ -44,9 +43,9 @@ public class RiotApiController {
                 riotApiKey;
 
         String response = restTemplate.getForObject(url, String.class);
-        Map<String, Object> parsedMap = new JacksonJsonParser().parseMap(response);
+        Map<String, Object> parsedMap = new JacksonJsonParser().parseMap(response);/*
     	AppController appController = new AppController();
-    	double result = appController.run(math);
+    	double result = appController.run(math);*/
     	Date time = new Date();
         parsedMap.forEach((key, value) -> log.info(String.format("key [%s] type [%s] value [%s]", key, value.getClass(), value)));
         int teamId = 5;
